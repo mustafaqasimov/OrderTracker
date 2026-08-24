@@ -1,0 +1,28 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/order_tracker
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+security:
+  jwt:
+    secret: ${JWT_SECRET}
+    issuer: orderTracker
+    expiration-minutes: 60
+
+admin:
+  username: ${ADMIN_USERNAME}
+  email: ${ADMIN_EMAIL}
+  password: ${ADMIN_PASSWORD}
+
+
+
