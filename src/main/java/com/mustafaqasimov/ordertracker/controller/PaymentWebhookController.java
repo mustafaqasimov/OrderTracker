@@ -4,6 +4,8 @@ import com.mustafaqasimov.ordertracker.dto.request.PaymentWebhookRequest;
 import com.mustafaqasimov.ordertracker.exception.error.UnauthorizedException;
 import com.mustafaqasimov.ordertracker.service.WebhookService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +28,10 @@ public class PaymentWebhookController {
     @Value("${app.webhook.secret:changeit}")
     private String expectedSecret;
 
-    @Operation(summary = "Receive a payment status update from the gateway")
+    @Operation(summary = "Receive a payment status update from the gateway", description = "Handles incoming payment status updates from the payment gateway")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Payment status update received successfully")
+    })
     @PostMapping
     public ResponseEntity<Void> receive(
             @RequestHeader(value = "X-Webhook-Secret", required = false) String providedSecret,

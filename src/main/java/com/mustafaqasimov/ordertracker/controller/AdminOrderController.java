@@ -4,6 +4,8 @@ import com.mustafaqasimov.ordertracker.dto.response.OrderResponse;
 import com.mustafaqasimov.ordertracker.enums.OrderStatus;
 import com.mustafaqasimov.ordertracker.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
@@ -24,6 +26,9 @@ public class AdminOrderController {
     private final OrderService orderService;
 
     @Operation(summary = "List all orders (optionally filter by status)")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Orders retrieved successfully")
+    })
     @GetMapping
     public ResponseEntity<Page<OrderResponse>> listAll(
             @RequestParam(required = false) OrderStatus status,
@@ -33,12 +38,18 @@ public class AdminOrderController {
 
     @Operation(summary = "Get any order by id")
     @GetMapping("/{id}")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Order retrieved successfully")
+    })
     public ResponseEntity<OrderResponse> getOne(@PathVariable Long id) {
         return ResponseEntity.ok(orderService.getMyOrder(id)); // admin also passes the ownership check
     }
 
     @Operation(summary = "Force a status change on an order")
     @PatchMapping("/{id}/status")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Order status updated successfully")
+    })
     public ResponseEntity<OrderResponse> changeStatus(
             @PathVariable Long id,
             @RequestParam OrderStatus status,
