@@ -4,6 +4,8 @@ import com.mustafaqasimov.ordertracker.dto.request.ShipmentWebhookRequest;
 import com.mustafaqasimov.ordertracker.exception.error.UnauthorizedException;
 import com.mustafaqasimov.ordertracker.service.WebhookService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +28,10 @@ public class ShipmentWebhookController {
     @Value("${app.webhook.secret:changeit}")
     private String expectedSecret;
 
-    @Operation(summary = "Receive a shipment status update from the carrier")
+    @Operation(summary = "Receive a shipment status update from the carrier", description = "Handles incoming shipment status updates from the shipping carrier")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Shipment status update received successfully")
+    })
     @PostMapping
     public ResponseEntity<Void> receive(
             @RequestHeader(value = "X-Webhook-Secret", required = false) String providedSecret,
