@@ -1,12 +1,10 @@
 package com.mustafaqasimov.ordertracker.exception;
 
-import com.mustafaqasimov.ordertracker.exception.error.InvalidCredentialsException;
-import com.mustafaqasimov.ordertracker.exception.error.ResourceAlreadyExistsException;
-import com.mustafaqasimov.ordertracker.exception.error.ResourceNotFoundException;
-import com.mustafaqasimov.ordertracker.exception.error.UnauthorizedException;
+import com.mustafaqasimov.ordertracker.exception.error.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -46,6 +44,21 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, Object>> handleUnAuthorized(UnauthorizedException ex) {
         log.error("Unauthorized access", ex);
         return buildErrorResponse(HttpStatus.FORBIDDEN, ex.getMessage());
+    }
+
+    @ExceptionHandler(InvalidOperationException.class)
+    public ResponseEntity<Map<String, Object>> handleInvalidOperation(InvalidOperationException ex) {
+        log.warn("Invalid operation: {}", ex.getMessage());
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, Object>> handleValidation(MethodArgumentNotValidException ex) {
+        StringBuilder sb = new StringBuilder();
+        ex.getBindingResult().getFieldErrors().forEach(fe ->
+                sb.append(fe.getField()).append(": ").append(fe.getDefaultMessage()).append("; "));
+        String msg = sb.length() > 0 ? sb.substring(0, sb.length() - 2) : "Validation failed";
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, msg);
     }
 
     private ResponseEntity<Map<String, Object>> buildErrorResponse(HttpStatus status, String message) {
