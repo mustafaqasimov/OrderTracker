@@ -3,12 +3,14 @@ package com.mustafaqasimov.ordertracker.service;
 import com.mustafaqasimov.ordertracker.dto.request.CreateOrderRequest;
 import com.mustafaqasimov.ordertracker.dto.request.OrderItemRequest;
 import com.mustafaqasimov.ordertracker.dto.request.UpdateOrderRequest;
+import com.mustafaqasimov.ordertracker.dto.response.DashboardResponse;
 import com.mustafaqasimov.ordertracker.dto.response.OrderResponse;
 import com.mustafaqasimov.ordertracker.dto.response.OrderStatusHistoryResponse;
 import com.mustafaqasimov.ordertracker.entity.Order;
 import com.mustafaqasimov.ordertracker.entity.OrderItem;
 import com.mustafaqasimov.ordertracker.entity.OrderStatusHistory;
 import com.mustafaqasimov.ordertracker.entity.User;
+import com.mustafaqasimov.ordertracker.enums.ActiveStatus;
 import com.mustafaqasimov.ordertracker.enums.OrderStatus;
 import com.mustafaqasimov.ordertracker.enums.StatusChangeSource;
 import com.mustafaqasimov.ordertracker.exception.error.InvalidOperationException;
@@ -32,6 +34,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -136,7 +139,8 @@ public class OrderService {
             throw new InvalidOperationException(
                     "Only PENDING or CANCELLED orders can be deleted");
         }
-        orderRepository.delete(order);
+        order.setActive(ActiveStatus.INACTIVE);
+        orderRepository.save(order);
         log.info("Order {} deleted", order.getOrderNumber());
     }
 
@@ -164,6 +168,34 @@ public class OrderService {
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found: " + orderId));
         return applyStatusChange(order, newStatus, StatusChangeSource.ADMIN,
                 note != null ? note : "Changed by admin");
+    }
+
+    public List<OrderStatusHistoryResponse> getOrderHistoryForAdmin(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found: " + orderId));
+
+        List<OrderStatusHistory> historyList = historyRepository
+                .findByOrderIdOrderByCreatedAtDesc(orderId);
+
+        return historyList.stream()
+                .map(orderMapper::toHistoryResponse)
+                .collect(Collectors.toList());
+    }
+
+    public DashboardResponse getDashboardStatistics() {
+        long total = orderRepository.count();
+        long pending = orderRepository.countByStatus(OrderStatus.PENDING);
+        long paid = orderRepository.countByStatus(OrderStatus.PAID);
+        long delivered = orderRepository.countByStatus(OrderStatus.DELIVERED);
+        long cancelled = orderRepository.countByStatus(OrderStatus.CANCELLED);
+
+        return DashboardResponse.builder()
+                .totalOrders(total)
+                .pendingOrders(pending)
+                .paidOrders(paid)
+                .deliveredOrders(delivered)
+                .cancelledOrders(cancelled)
+                .build();
     }
 
     // ---------- WEBHOOK-DRIVEN TRANSITIONS ----------
@@ -290,4 +322,5 @@ public class OrderService {
         }
         throw new IllegalStateException("Could not generate a unique order number");
     }
+
 }

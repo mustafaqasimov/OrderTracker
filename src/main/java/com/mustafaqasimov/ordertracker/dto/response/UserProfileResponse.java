@@ -1,5 +1,6 @@
 package com.mustafaqasimov.ordertracker.dto.response;
 
+import com.mustafaqasimov.ordertracker.enums.ActiveStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,4 +25,7 @@ public class UserProfileResponse {
 
     @Schema(description = "User's role", example = "ROLE_USER")
     String role;
+
+    @Schema(description = "User's active status", example = "ACTIVE")
+    ActiveStatus activeStatus;
 }

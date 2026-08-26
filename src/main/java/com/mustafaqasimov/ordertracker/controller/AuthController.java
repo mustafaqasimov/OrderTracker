@@ -24,10 +24,10 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @Operation(summary = "Register a new fleet manager",
-            description = "Registers a new fleet manager with the provided details")
+    @Operation(summary = "Register a new user",
+            description = "Registers a new user with the provided details")
     @ApiResponses(value = {
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "Fleet manager registered successfully"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "User registered successfully"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid request body")
     })
     @PostMapping("/register")
@@ -36,7 +36,7 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @Operation(summary = "Login", description = "Logs in an existing fleet manager with the provided credentials")
+    @Operation(summary = "Login", description = "Logs in an existing user with the provided credentials")
     @ApiResponses(value = {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Login successful"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Invalid credentials")

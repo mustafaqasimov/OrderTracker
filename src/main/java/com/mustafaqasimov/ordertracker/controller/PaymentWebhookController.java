@@ -25,7 +25,7 @@ public class PaymentWebhookController {
 
     private final WebhookService webhookService;
 
-    @Value("${app.webhook.secret:changeit}")
+    @Value("${app.webhook.secret}")
     private String expectedSecret;
 
     @Operation(summary = "Receive a payment status update from the gateway", description = "Handles incoming payment status updates from the payment gateway")
