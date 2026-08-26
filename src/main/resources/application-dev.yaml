@@ -40,5 +40,5 @@ app:
   mail:
     from: ${MAIL_FROM:no-reply@ordertracker.local}
   webhook:
-    secret: ${WEBHOOK_SECRET:changeit}
+    secret: ${WEBHOOK_SECRET}
 

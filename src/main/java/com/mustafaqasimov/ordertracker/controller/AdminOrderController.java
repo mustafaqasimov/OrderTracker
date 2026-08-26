@@ -1,6 +1,8 @@
 package com.mustafaqasimov.ordertracker.controller;
 
+import com.mustafaqasimov.ordertracker.dto.response.DashboardResponse;
 import com.mustafaqasimov.ordertracker.dto.response.OrderResponse;
+import com.mustafaqasimov.ordertracker.dto.response.OrderStatusHistoryResponse;
 import com.mustafaqasimov.ordertracker.enums.OrderStatus;
 import com.mustafaqasimov.ordertracker.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,6 +17,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin/orders")
@@ -55,5 +59,20 @@ public class AdminOrderController {
             @RequestParam OrderStatus status,
             @RequestParam(required = false) String note) {
         return ResponseEntity.ok(orderService.adminChangeStatus(id, status, note));
+    }
+
+    @Operation(summary = "Get status history for an order", description = "Retrieve the status history for a specific order")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Status history retrieved successfully")
+    })
+    @GetMapping("/{id}/history")
+    public ResponseEntity<List<OrderStatusHistoryResponse>> history(@PathVariable Long id) {
+        return ResponseEntity.ok(orderService.getOrderHistoryForAdmin(id));
+    }
+
+    @Operation(summary = "Get dashboard statistics", description = "Retrieve dashboard statistics")
+    @GetMapping("/dashboard")
+    public ResponseEntity<DashboardResponse> getDashboard() {
+        return ResponseEntity.ok(orderService.getDashboardStatistics());
     }
 }

@@ -15,10 +15,16 @@ import java.time.LocalDateTime;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Schema(description = "Single status transition record")
 public class OrderStatusHistoryResponse {
+    @Schema(description = "Status history ID", example = "1")
     Long id;
+    @Schema(description = "Previous status", example = "PENDING")
     OrderStatus fromStatus;
+    @Schema(description = "New status", example = "CONFIRMED")
     OrderStatus toStatus;
+    @Schema(description = "Source of the status change", example = "USER")
     StatusChangeSource source;
+    @Schema(description = "Note about the status change", example = "Order confirmed by user")
     String note;
+    @Schema(description = "Timestamp of the status change", example = "2023-01-01T12:00:00Z")
     LocalDateTime changedAt;
 }

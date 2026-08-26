@@ -19,5 +19,6 @@ public interface UserMapper {
     @Mapping(target = "refreshToken", source = "refreshToken")
     AuthResponse toAuthResponse(User user, String accessToken, String refreshToken);
 
+    @Mapping(target = "activeStatus", source = "active")
     UserProfileResponse toProfileResponse(User user);
 }
