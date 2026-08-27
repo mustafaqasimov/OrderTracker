@@ -28,13 +28,13 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/auth/**",
+                                "/api/auth/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
                                 "/v3/api-docs/**",
                                 "/api/webhooks/**").permitAll()
-                        .requestMatchers("/users/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/users/me/**").hasRole("USER")
+                        .requestMatchers("/api/users/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/users/me/**").hasRole("USER")
                         .requestMatchers("/api/admin/webhook-logs/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
