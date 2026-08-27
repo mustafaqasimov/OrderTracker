@@ -14,10 +14,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * Keeps the live sockets and fans order events out to them.
- * A regular user only receives events for their own orders; an admin receives everything.
- */
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -59,11 +56,7 @@ public class OrderWebSocketHandler extends TextWebSocketHandler {
         sessions.remove(session.getId());
     }
 
-    /**
-     * Pushes an event to the order's owner and to every connected admin.
-     *
-     * @param ownerId id of the user the order belongs to
-     */
+
     public void broadcast(OrderEvent event, Long ownerId) {
         String payload;
         try {

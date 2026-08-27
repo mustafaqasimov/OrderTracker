@@ -15,11 +15,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Browsers cannot set an Authorization header on a WebSocket handshake, so the JWT
- * is passed as the {@code token} query parameter. The handshake is rejected outright
- * when the token is missing or invalid — no unauthenticated socket ever opens.
- */
 @Slf4j
 @Component
 @RequiredArgsConstructor

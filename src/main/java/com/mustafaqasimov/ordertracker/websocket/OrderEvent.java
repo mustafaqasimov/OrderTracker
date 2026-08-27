@@ -6,10 +6,7 @@ import com.mustafaqasimov.ordertracker.enums.StatusChangeSource;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-/**
- * Payload pushed over the WebSocket whenever an order is created or changes status.
- * {@code userId} is never serialised to the client — it is only used server-side for routing.
- */
+
 public record OrderEvent(
         String type,
         Long orderId,

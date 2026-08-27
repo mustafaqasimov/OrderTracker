@@ -11,10 +11,7 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 
 import java.time.LocalDateTime;
 
-/**
- * Builds order events and hands them to the socket handler <b>after the transaction commits</b>,
- * so a client that reacts by re-fetching the order never reads pre-commit state.
- */
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
