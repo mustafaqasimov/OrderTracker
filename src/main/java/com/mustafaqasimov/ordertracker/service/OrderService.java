@@ -21,6 +21,7 @@ import com.mustafaqasimov.ordertracker.repository.OrderRepository;
 import com.mustafaqasimov.ordertracker.repository.OrderStatusHistoryRepository;
 import com.mustafaqasimov.ordertracker.repository.UserRepository;
 import com.mustafaqasimov.ordertracker.security.SecurityUtils;
+import com.mustafaqasimov.ordertracker.websocket.OrderEventPublisher;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -46,6 +47,7 @@ public class OrderService {
     private final UserRepository userRepository;
     private final OrderMapper orderMapper;
     private final EmailNotificationService emailNotificationService;
+    private final OrderEventPublisher orderEventPublisher;
 
     private static final DateTimeFormatter ORDER_NO_FORMAT = DateTimeFormatter.ofPattern("yyyyMMdd");
 
@@ -75,6 +77,8 @@ public class OrderService {
         Order saved = orderRepository.save(order);
 
         recordHistory(saved, null, saved.getStatus(), StatusChangeSource.USER, "Order created");
+
+        orderEventPublisher.orderCreated(saved);
 
         log.info("Order {} created by user {}", saved.getOrderNumber(), userId);
         return orderMapper.toResponse(saved);
@@ -238,6 +242,9 @@ public class OrderService {
         order.setStatus(newStatus);
 
         recordHistory(order, prev, newStatus, source, note);
+
+        // live push to the connected clients (fires after commit)
+        orderEventPublisher.statusChanged(order, prev, newStatus, source, note);
 
         // fire-and-forget email (async, retried)
         try {

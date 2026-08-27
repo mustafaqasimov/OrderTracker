@@ -32,7 +32,11 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
                                 "/v3/api-docs/**",
-                                "/api/webhooks/**").permitAll()
+                                "/api/webhooks/**",
+                                // WebSocket handshake is authenticated by JwtHandshakeInterceptor (token query param)
+                                "/ws/**",
+                                // static demo frontend
+                                "/", "/index.html", "/css/**", "/js/**", "/favicon.ico").permitAll()
                         .requestMatchers("/api/users/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/users/me/**").hasRole("USER")
                         .requestMatchers("/api/admin/webhook-logs/**").hasRole("ADMIN")
