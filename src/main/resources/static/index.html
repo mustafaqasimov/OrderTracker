@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>OrderTracker — Live Order Tracking</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<header class="topbar">
+    <div class="brand">
+        <span class="dot"></span>
+        <h1>OrderTracker</h1>
+    </div>
+    <div class="topbar-right">
+        <span id="wsStatus" class="pill pill-off">Disconnected</span>
+        <span id="whoami" class="whoami hidden"></span>
+        <button id="logoutBtn" class="btn btn-ghost hidden">Log out</button>
+    </div>
+</header>
+
+<main>
+    <!-- ============ LOGIN ============ -->
+    <section id="loginView" class="card login-card">
+        <div class="tabs">
+            <button id="tabLogin" class="tab tab-active" type="button">Sign in</button>
+            <button id="tabRegister" class="tab" type="button">Register</button>
+        </div>
+
+        <p class="muted">Order status changes are pushed in real time over WebSocket.</p>
+
+        <form id="loginForm" autocomplete="on">
+            <label for="email">Email</label>
+            <input id="email" type="email" required placeholder="admin@ordertracker.local"
+                   autocomplete="username">
+
+            <label for="password">Password</label>
+            <input id="password" type="password" required placeholder="••••••••"
+                   autocomplete="current-password">
+
+            <button type="submit" class="btn btn-primary">Sign in</button>
+        </form>
+
+        <form id="registerForm" class="hidden" autocomplete="on">
+            <label for="regFullName">Full name</label>
+            <input id="regFullName" required minlength="3" maxlength="100" placeholder="Mustafa Qasimov"
+                   autocomplete="name">
+
+            <label for="regEmail">Email</label>
+            <input id="regEmail" type="email" required placeholder="you@example.com"
+                   autocomplete="username">
+
+            <label for="regPassword">Password</label>
+            <input id="regPassword" type="password" required minlength="8" placeholder="At least 8 characters"
+                   autocomplete="new-password">
+
+            <label for="regPassword2">Confirm password</label>
+            <input id="regPassword2" type="password" required minlength="8" placeholder="Repeat the password"
+                   autocomplete="new-password">
+
+            <button type="submit" class="btn btn-primary">Create account</button>
+        </form>
+
+        <p id="loginError" class="error hidden"></p>
+    </section>
+
+    <!-- ============ DASHBOARD ============ -->
+    <section id="appView" class="hidden">
+        <div class="grid">
+
+            <div class="card">
+                <div class="card-head">
+                    <h2>My orders</h2>
+                    <button id="refreshBtn" class="btn btn-ghost btn-sm">Refresh</button>
+                </div>
+                <div id="orders" class="orders">
+                    <p class="muted">Loading…</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-head">
+                    <h2>Live feed</h2>
+                    <button id="clearFeedBtn" class="btn btn-ghost btn-sm">Clear</button>
+                </div>
+                <ul id="feed" class="feed">
+                    <li class="feed-empty muted">No events yet — status changes will appear here.</li>
+                </ul>
+            </div>
+
+            <div class="card span-2">
+                <div class="card-head">
+                    <h2>Create a test order</h2>
+                </div>
+                <form id="orderForm" class="order-form">
+                    <div class="field">
+                        <label for="productName">Product</label>
+                        <input id="productName" value="Wireless Mouse" required>
+                    </div>
+                    <div class="field field-sm">
+                        <label for="quantity">Qty</label>
+                        <input id="quantity" type="number" min="1" value="2" required>
+                    </div>
+                    <div class="field field-sm">
+                        <label for="unitPrice">Price</label>
+                        <input id="unitPrice" type="number" min="0" step="0.01" value="29.99" required>
+                    </div>
+                    <div class="field">
+                        <label for="shippingAddress">Shipping address</label>
+                        <input id="shippingAddress" value="123 Main Street, Baku" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </form>
+                <p id="orderMsg" class="hidden"></p>
+            </div>
+
+        </div>
+    </section>
+</main>
+
+<script src="/js/app.js"></script>
+</body>
+</html>
