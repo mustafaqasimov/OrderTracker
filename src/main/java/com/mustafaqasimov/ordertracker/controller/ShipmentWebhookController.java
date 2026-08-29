@@ -25,7 +25,7 @@ public class ShipmentWebhookController {
 
     private final WebhookService webhookService;
 
-    @Value("${app.webhook.secret:changeit}")
+    @Value("${app.webhook.secret}")
     private String expectedSecret;
 
     @Operation(summary = "Receive a shipment status update from the carrier", description = "Handles incoming shipment status updates from the shipping carrier")
